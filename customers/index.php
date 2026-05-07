@@ -6,7 +6,6 @@ $showFilter = isset($_GET['show_filter']) ? 1 : 0;
 $custKode = trim($_GET['cust_kode'] ?? '');
 $custNama = trim($_GET['cust_nama'] ?? '');
 $custHp = trim($_GET['cust_hp'] ?? '');
-$custKodeNumber = extract_code_number($custKode);
 $page = max(1, (int) ($_GET['page'] ?? 1));
 $perPage = 10;
 
@@ -14,10 +13,10 @@ $baseSql = "FROM customers WHERE 1=1";
 $types = '';
 $params = [];
 
-if ($custKodeNumber !== '') {
-    $baseSql .= " AND custId = ?";
-    $types .= 'i';
-    $params[] = (int) $custKodeNumber;
+if ($custKode !== '') {
+    $baseSql .= " AND CONCAT('C', LPAD(custId, 3, '0')) LIKE ?";
+    $types .= 's';
+    $params[] = '%' . $custKode . '%';
 }
 
 if ($custNama !== '') {

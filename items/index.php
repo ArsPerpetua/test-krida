@@ -5,7 +5,6 @@ require_once __DIR__ . '/../includes/header.php';
 $showFilter = isset($_GET['show_filter']) ? 1 : 0;
 $itemNumber = trim($_GET['item_number'] ?? '');
 $deskripsi = trim($_GET['deskripsi'] ?? '');
-$itemNumberValue = extract_code_number($itemNumber);
 $page = max(1, (int) ($_GET['page'] ?? 1));
 $perPage = 10;
 
@@ -13,10 +12,10 @@ $baseSql = "FROM items WHERE 1=1";
 $types = '';
 $params = [];
 
-if ($itemNumberValue !== '') {
-    $baseSql .= " AND itemId = ?";
-    $types .= 'i';
-    $params[] = (int) $itemNumberValue;
+if ($itemNumber !== '') {
+    $baseSql .= " AND CONCAT('P', LPAD(itemId, 3, '0')) LIKE ?";
+    $types .= 's';
+    $params[] = '%' . $itemNumber . '%';
 }
 
 if ($deskripsi !== '') {

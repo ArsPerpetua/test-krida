@@ -4,7 +4,6 @@ require_once __DIR__ . '/../includes/header.php';
 
 $showFilter = isset($_GET['show_filter']) ? 1 : 0;
 $orderNo = trim($_GET['order_no'] ?? '');
-$orderNoValue = extract_code_number($orderNo);
 $orderDate = trim($_GET['order_date'] ?? '');
 $customer = trim($_GET['customer'] ?? '');
 $page = max(1, (int) ($_GET['page'] ?? 1));
@@ -18,10 +17,10 @@ $baseSql = "
 $types = '';
 $params = [];
 
-if ($orderNoValue !== '') {
-    $baseSql .= " AND CAST(SUBSTRING(o.orderNo, 3) AS UNSIGNED) = ?";
-    $types .= 'i';
-    $params[] = (int) $orderNoValue;
+if ($orderNo !== '') {
+    $baseSql .= " AND o.orderNo LIKE ?";
+    $types .= 's';
+    $params[] = '%' . $orderNo . '%';
 }
 
 if ($orderDate !== '') {
@@ -158,13 +157,13 @@ $paginationQuery = [
                     <?php
                     $pageQuery = http_build_query(array_filter(array_merge($paginationQuery, ['page' => $i]), fn($v) => $v !== null));
                     ?>
-                        <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
+                    <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
                 <?php endfor; ?>
                 <a href="/test-krida/orders/index.php<?= $page < $totalPages ? '?' . $nextQuery : '' ?>">next</a>
-                </div>
+            </div>
         </div>
     <?php else: ?>
-            <div class="empty">Belum ada data sales order.</div>
+        <div class="empty">Belum ada data sales order.</div>
     <?php endif; ?>
 </div>
 
