@@ -150,21 +150,21 @@ $paginationQuery = [
             <div>Page <?= $page ?> of <?= $totalPages ?> show <?= $currentCount ?> record</div>
             <div class="actions" style="margin-top: 8px;">
                 <?php
-                $prevQuery = http_build_query(array_filter([...$paginationQuery, 'page' => max(1, $page - 1)], fn($v) => $v !== null));
-                $nextQuery = http_build_query(array_filter([...$paginationQuery, 'page' => min($totalPages, $page + 1)], fn($v) => $v !== null));
+                $prevQuery = http_build_query(array_filter(array_merge($paginationQuery, ['page' => max(1, $page - 1)]), fn($v) => $v !== null));
+                $nextQuery = http_build_query(array_filter(array_merge($paginationQuery, ['page' => min($totalPages, $page + 1)]), fn($v) => $v !== null));
                 ?>
                 <a href="/test-krida/orders/index.php<?= $page > 1 ? '?' . $prevQuery : '' ?>">previous</a>
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                     <?php
-                    $pageQuery = http_build_query(array_filter([...$paginationQuery, 'page' => $i], fn($v) => $v !== null));
+                    $pageQuery = http_build_query(array_filter(array_merge($paginationQuery, ['page' => $i]), fn($v) => $v !== null));
                     ?>
-                    <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
+                        <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
                 <?php endfor; ?>
                 <a href="/test-krida/orders/index.php<?= $page < $totalPages ? '?' . $nextQuery : '' ?>">next</a>
-            </div>
+                </div>
         </div>
     <?php else: ?>
-        <div class="empty">Belum ada data sales order.</div>
+            <div class="empty">Belum ada data sales order.</div>
     <?php endif; ?>
 </div>
 
