@@ -81,21 +81,6 @@ function get_next_available_id(mysqli $conn, string $table, string $column): int
     return $nextId;
 }
 
-function column_exists(mysqli $conn, string $table, string $column): bool
-{
-    $allowedTables = ['customers', 'items', 'orders', 'orderItem'];
-
-    if (!in_array($table, $allowedTables, true)) {
-        throw new InvalidArgumentException('Table is not allowed.');
-    }
-
-    $safeColumn = $conn->real_escape_string($column);
-    $safeTable = $conn->real_escape_string($table);
-    $result = $conn->query("SHOW COLUMNS FROM `$safeTable` LIKE '$safeColumn'");
-
-    return $result !== false && $result->num_rows > 0;
-}
-
 function generate_order_no(mysqli $conn): string
 {
     $prefix = 'KW';

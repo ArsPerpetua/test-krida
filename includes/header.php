@@ -139,9 +139,27 @@ $flash = get_flash();
         .home-menu a {
             color: #111;
             text-decoration: none;
-            border: 1px solid #000;
-            padding: 10px 12px;
+            padding: 0;
             background: #fff;
+            border: 0;
+        }
+        .home-preview {
+            display: none;
+            margin-top: 20px;
+        }
+        .home-preview.active {
+            display: block;
+        }
+        .home-group-link {
+            width: 100%;
+            background: #fff;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
         }
         @media (max-width: 720px) {
             .container { width: min(100% - 20px, 1100px); }

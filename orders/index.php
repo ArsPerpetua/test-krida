@@ -7,9 +7,10 @@ $orderNo = trim($_GET['order_no'] ?? '');
 $orderNoValue = extract_code_number($orderNo);
 $orderDate = trim($_GET['order_date'] ?? '');
 $customer = trim($_GET['customer'] ?? '');
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$perPage = 10;
 
-$sql = "
-    SELECT o.orderId, o.orderNo, o.orderDate, c.cust_nama, c.custId
+$baseSql = "
     FROM orders o
     INNER JOIN customers c ON c.custId = o.custId
     WHERE 1=1
@@ -18,32 +19,60 @@ $types = '';
 $params = [];
 
 if ($orderNoValue !== '') {
-    $sql .= " AND CAST(SUBSTRING(o.orderNo, 3) AS UNSIGNED) = ?";
+    $baseSql .= " AND CAST(SUBSTRING(o.orderNo, 3) AS UNSIGNED) = ?";
     $types .= 'i';
     $params[] = (int) $orderNoValue;
 }
 
 if ($orderDate !== '') {
-    $sql .= " AND o.orderDate = ?";
+    $baseSql .= " AND o.orderDate = ?";
     $types .= 's';
     $params[] = $orderDate;
 }
 
 if ($customer !== '') {
-    $sql .= " AND c.cust_nama LIKE ?";
+    $baseSql .= " AND c.cust_nama LIKE ?";
     $types .= 's';
     $params[] = '%' . $customer . '%';
 }
 
-$sql .= " ORDER BY o.orderId DESC";
-$stmt = $conn->prepare($sql);
+$countSql = "SELECT COUNT(*) AS total " . $baseSql;
+$countStmt = $conn->prepare($countSql);
 
 if ($types !== '') {
-    $stmt->bind_param($types, ...$params);
+    $countStmt->bind_param($types, ...$params);
 }
 
+$countStmt->execute();
+$totalRecords = (int) ($countStmt->get_result()->fetch_assoc()['total'] ?? 0);
+$countStmt->close();
+
+$totalPages = max(1, (int) ceil($totalRecords / $perPage));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $perPage;
+
+$sql = "
+    SELECT o.orderId, o.orderNo, o.orderDate, c.cust_nama, c.custId
+    FROM orders o
+    INNER JOIN customers c ON c.custId = o.custId
+    WHERE 1=1
+";
+$sql = "SELECT o.orderId, o.orderNo, o.orderDate, c.cust_nama, c.custId " . $baseSql . " ORDER BY o.orderId DESC LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($sql);
+
+$runTypes = $types . 'ii';
+$runParams = [...$params, $perPage, $offset];
+$stmt->bind_param($runTypes, ...$runParams);
 $stmt->execute();
 $result = $stmt->get_result();
+$currentCount = $result ? $result->num_rows : 0;
+
+$paginationQuery = [
+    'show_filter' => $showFilter ? 1 : null,
+    'order_no' => $orderNo !== '' ? $orderNo : null,
+    'order_date' => $orderDate !== '' ? $orderDate : null,
+    'customer' => $customer !== '' ? $customer : null,
+];
 ?>
 
 <div class="card">
@@ -116,6 +145,23 @@ $result = $stmt->get_result();
                     <?php endwhile; ?>
                 </tbody>
             </table>
+            <div style="margin-top: 18px;">
+                <div>Page <?= $page ?> of <?= $totalPages ?> show <?= $currentCount ?> record</div>
+                <div class="actions" style="margin-top: 8px;">
+                    <?php
+                    $prevQuery = http_build_query(array_filter([...$paginationQuery, 'page' => max(1, $page - 1)], fn($v) => $v !== null));
+                    $nextQuery = http_build_query(array_filter([...$paginationQuery, 'page' => min($totalPages, $page + 1)], fn($v) => $v !== null));
+                    ?>
+                    <a href="/test-krida/orders/index.php<?= $page > 1 ? '?' . $prevQuery : '' ?>">previous</a>
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <?php
+                        $pageQuery = http_build_query(array_filter([...$paginationQuery, 'page' => $i], fn($v) => $v !== null));
+                        ?>
+                        <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
+                    <?php endfor; ?>
+                    <a href="/test-krida/orders/index.php<?= $page < $totalPages ? '?' . $nextQuery : '' ?>">next</a>
+                </div>
+            </div>
     <?php else: ?>
             <div class="empty">Belum ada data sales order.</div>
     <?php endif; ?>

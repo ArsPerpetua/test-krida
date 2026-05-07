@@ -7,38 +7,62 @@ $custKode = trim($_GET['cust_kode'] ?? '');
 $custNama = trim($_GET['cust_nama'] ?? '');
 $custHp = trim($_GET['cust_hp'] ?? '');
 $custKodeNumber = extract_code_number($custKode);
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$perPage = 10;
 
-$sql = "SELECT * FROM customers WHERE 1=1";
+$baseSql = "FROM customers WHERE 1=1";
 $types = '';
 $params = [];
 
 if ($custKodeNumber !== '') {
-    $sql .= " AND custId = ?";
+    $baseSql .= " AND custId = ?";
     $types .= 'i';
     $params[] = (int) $custKodeNumber;
 }
 
 if ($custNama !== '') {
-    $sql .= " AND cust_nama LIKE ?";
+    $baseSql .= " AND cust_nama LIKE ?";
     $types .= 's';
     $params[] = '%' . $custNama . '%';
 }
 
 if ($custHp !== '') {
-    $sql .= " AND cust_hp LIKE ?";
+    $baseSql .= " AND cust_hp LIKE ?";
     $types .= 's';
     $params[] = '%' . $custHp . '%';
 }
 
-$sql .= " ORDER BY custId DESC";
-$stmt = $conn->prepare($sql);
+$countSql = "SELECT COUNT(*) AS total " . $baseSql;
+$countStmt = $conn->prepare($countSql);
 
 if ($types !== '') {
-    $stmt->bind_param($types, ...$params);
+    $countStmt->bind_param($types, ...$params);
 }
 
+$countStmt->execute();
+$totalRecords = (int) ($countStmt->get_result()->fetch_assoc()['total'] ?? 0);
+$countStmt->close();
+
+$totalPages = max(1, (int) ceil($totalRecords / $perPage));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $perPage;
+
+$sql = "SELECT * " . $baseSql . " ORDER BY custId DESC LIMIT ? OFFSET ?";
+$stmt = $conn->prepare($sql);
+
+$runTypes = $types . 'ii';
+$runParams = [...$params, $perPage, $offset];
+$stmt->bind_param($runTypes, ...$runParams);
 $stmt->execute();
 $result = $stmt->get_result();
+$currentCount = $result ? $result->num_rows : 0;
+
+$paginationQuery = [
+    'show_filter' => $showFilter ? 1 : null,
+    'cust_kode' => $custKode !== '' ? $custKode : null,
+    'cust_nama' => $custNama !== '' ? $custNama : null,
+    'cust_hp' => $custHp !== '' ? $custHp : null,
+];
 ?>
 
 <div class="card">
@@ -113,6 +137,23 @@ $result = $stmt->get_result();
                 <?php endwhile; ?>
             </tbody>
         </table>
+        <div style="margin-top: 18px;">
+            <div>Page <?= $page ?> of <?= $totalPages ?> show <?= $currentCount ?> record</div>
+            <div class="actions" style="margin-top: 8px;">
+                <?php
+                $prevQuery = http_build_query(array_filter([...$paginationQuery, 'page' => max(1, $page - 1)], fn($v) => $v !== null));
+                $nextQuery = http_build_query(array_filter([...$paginationQuery, 'page' => min($totalPages, $page + 1)], fn($v) => $v !== null));
+                ?>
+                <a href="/test-krida/customers/index.php<?= $page > 1 ? '?' . $prevQuery : '' ?>">previous</a>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <?php
+                    $pageQuery = http_build_query(array_filter([...$paginationQuery, 'page' => $i], fn($v) => $v !== null));
+                    ?>
+                    <a href="/test-krida/customers/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
+                <?php endfor; ?>
+                <a href="/test-krida/customers/index.php<?= $page < $totalPages ? '?' . $nextQuery : '' ?>">next</a>
+            </div>
+        </div>
     <?php else: ?>
         <div class="empty">Data customer masih kosong.</div>
     <?php endif; ?>
