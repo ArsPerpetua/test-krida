@@ -86,32 +86,32 @@ if (empty($details)) {
             <input type="hidden" name="orderId" value="<?= (int) $order['orderId'] ?>">
             <input type="hidden" id="headerDiscPercent" name="headerDiscPercent" value="<?= (float) $order['headerDiscPercent'] ?>">
             <input type="hidden" id="headerDisc" name="headerDisc" value="<?= (float) $order['headerDisc'] ?>">
-            <div class="grid grid-2">
-                <div>
-                    <label for="orderNo">Nomor Order</label>
-                    <input type="text" id="orderNo" name="orderNo" required readonly
-                        value="<?= htmlspecialchars($order['orderNo']) ?>">
-                </div>
-                <div>
-                    <label for="orderDate">Tanggal Order Order</label>
-                    <input type="date" id="orderDate" name="orderDate" required
-                        value="<?= htmlspecialchars($order['orderDate']) ?>">
-                </div>
-                <div>
-                    <label for="custId">Nama Customer</label>
-                    <select id="custId" name="custId" required>
-                        <option value="">Pilih customer</option>
-                        <?php
-                        $customers->data_seek(0);
-                        while ($customer = $customers->fetch_assoc()):
-                            ?>
-                            <option value="<?= (int) $customer['custId'] ?>" <?= (string) $order['custId'] === (string) $customer['custId'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars(format_running_code('C', (int) $customer['custId']) . ' - ' . $customer['cust_nama']) ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-            </div>
+            <table style="max-width: 500px;">
+                <tr>
+                    <td style="width: 150px; font-weight: 600; vertical-align: middle;">Nomor Order</td>
+                    <td><input type="text" id="orderNo" name="orderNo" required readonly value="<?= htmlspecialchars($order['orderNo']) ?>"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; vertical-align: middle;">Tanggal Order</td>
+                    <td><input type="date" id="orderDate" name="orderDate" required value="<?= htmlspecialchars($order['orderDate']) ?>"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600; vertical-align: middle;">Nama Customer</td>
+                    <td>
+                        <select id="custId" name="custId" required>
+                            <option value="">Pilih customer</option>
+                            <?php
+                            $customers->data_seek(0);
+                            while ($customer = $customers->fetch_assoc()):
+                                ?>
+                                <option value="<?= (int) $customer['custId'] ?>" <?= (string) $order['custId'] === (string) $customer['custId'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars(format_running_code('C', (int) $customer['custId']) . ' - ' . $customer['cust_nama']) ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </td>
+                </tr>
+            </table>
 
             <div style="margin-top: 20px;">
                 <div class="actions" style="justify-content: space-between;">
