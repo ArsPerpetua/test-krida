@@ -116,9 +116,9 @@ if ($id > 0) {
                             <tr>
                                 <td><?= htmlspecialchars(format_running_code('P', (int) $detail['itemId'])) ?></td>
                                 <td><?= htmlspecialchars($detail['deskripsi']) ?></td>
-                                <td><?= htmlspecialchars((string) $detail['qty']) ?></td>
+                                <td><?= (float) $detail['qty'] ?></td>
                                 <td><?= format_rupiah($detail['price']) ?></td>
-                                <td><?= htmlspecialchars(number_format($discPercent, 2)) ?></td>
+                                <td><?= round($discPercent, 2) ?></td>
                                 <td><?= format_rupiah($detail['discAmount']) ?></td>
                                 <td><?= format_rupiah($detail['totalItem']) ?></td>
                             </tr>

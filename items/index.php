@@ -60,8 +60,9 @@ $paginationQuery = [
     <div class="actions" style="justify-content: space-between; align-items: flex-start;">
         <div>
             <h2>Master Item</h2>
-            <div class="actions" style="margin-top: 12px;">
-                <a class="btn btn-light" href="/test-krida/items/index.php?show_filter=1">Search Filtering</a>
+            <div style="margin-top: 12px;">
+                <a href="/test-krida/items/index.php?show_filter=1"
+                    style="color: #111; text-decoration: underline; font-weight: 600;">Search Filtering</a>
             </div>
         </div>
         <div class="actions">
@@ -75,7 +76,8 @@ $paginationQuery = [
             <table>
                 <tr>
                     <td style="width: 220px;">Item Number</td>
-                    <td><input type="text" id="item_number" name="item_number" value="<?= htmlspecialchars($itemNumber) ?>"></td>
+                    <td><input type="text" id="item_number" name="item_number" value="<?= htmlspecialchars($itemNumber) ?>">
+                    </td>
                 </tr>
                 <tr>
                     <td>Deskripsi</td>
@@ -113,9 +115,12 @@ $paginationQuery = [
                         <td><?= format_rupiah($row['price']) ?></td>
                         <td>
                             <div class="actions">
-                                <a class="btn btn-light" href="/test-krida/items/view.php?id=<?= (int) $row['itemId'] ?>">View</a>
-                                <a class="btn btn-warning" href="/test-krida/items/form.php?id=<?= (int) $row['itemId'] ?>">Edit</a>
-                                <a class="btn btn-danger" href="/test-krida/items/delete.php?id=<?= (int) $row['itemId'] ?>" onclick="return confirm('Are you sure to delete <?= htmlspecialchars(format_running_code('P', (int) $row['itemId'])) ?>?')">Hapus</a>
+                                <a class="btn btn-light"
+                                    href="/test-krida/items/view.php?id=<?= (int) $row['itemId'] ?>">View</a>
+                                <a class="btn btn-warning"
+                                    href="/test-krida/items/form.php?id=<?= (int) $row['itemId'] ?>">Edit</a>
+                                <a class="btn btn-danger" href="/test-krida/items/delete.php?id=<?= (int) $row['itemId'] ?>"
+                                    onclick="return confirm('Are you sure to delete <?= htmlspecialchars(format_running_code('P', (int) $row['itemId'])) ?>?')">Hapus</a>
                             </div>
                         </td>
                     </tr>

@@ -37,7 +37,7 @@ function old(string $key, $default = '')
 
 function format_rupiah($number): string
 {
-    return number_format((float) $number, 2, ',', '.');
+    return 'Rp ' . number_format((float) $number, 0, ',', '.');
 }
 
 function sanitize_number($value): float

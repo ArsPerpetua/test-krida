@@ -69,8 +69,9 @@ $paginationQuery = [
     <div class="actions" style="justify-content: space-between; align-items: flex-start;">
         <div>
             <h2>Master Customer</h2>
-            <div class="actions" style="margin-top: 12px;">
-                <a class="btn btn-light" href="/test-krida/customers/index.php?show_filter=1">Search Filtering</a>
+            <div style="margin-top: 12px;">
+                <a href="/test-krida/customers/index.php?show_filter=1"
+                    style="color: #111; text-decoration: underline; font-weight: 600;">Search Filtering</a>
             </div>
         </div>
         <div class="actions">
@@ -128,9 +129,12 @@ $paginationQuery = [
                         <td><?= htmlspecialchars($row['cust_hp']) ?></td>
                         <td>
                             <div class="actions">
-                                <a class="btn btn-light" href="/test-krida/customers/view.php?id=<?= (int) $row['custId'] ?>">View</a>
-                                <a class="btn btn-warning" href="/test-krida/customers/form.php?id=<?= (int) $row['custId'] ?>">Edit</a>
-                                <a class="btn btn-danger" href="/test-krida/customers/delete.php?id=<?= (int) $row['custId'] ?>" onclick="return confirm('Are you sure to delete <?= htmlspecialchars(format_running_code('C', (int) $row['custId'])) ?>?')">Hapus</a>
+                                <a class="btn btn-light"
+                                    href="/test-krida/customers/view.php?id=<?= (int) $row['custId'] ?>">View</a>
+                                <a class="btn btn-warning"
+                                    href="/test-krida/customers/form.php?id=<?= (int) $row['custId'] ?>">Edit</a>
+                                <a class="btn btn-danger" href="/test-krida/customers/delete.php?id=<?= (int) $row['custId'] ?>"
+                                    onclick="return confirm('Are you sure to delete <?= htmlspecialchars(format_running_code('C', (int) $row['custId'])) ?>?')">Hapus</a>
                             </div>
                         </td>
                     </tr>

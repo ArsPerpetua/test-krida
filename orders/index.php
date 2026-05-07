@@ -79,8 +79,9 @@ $paginationQuery = [
     <div class="actions" style="justify-content: space-between; align-items: flex-start;">
         <div>
             <h2>Transaksi Sales Order</h2>
-            <div class="actions" style="margin-top: 12px;">
-                <a class="btn btn-light" href="/test-krida/orders/index.php?show_filter=1">Search Filtering</a>
+            <div style="margin-top: 12px;">
+                <a href="/test-krida/orders/index.php?show_filter=1"
+                    style="color: #111; text-decoration: underline; font-weight: 600;">Search Filtering</a>
             </div>
         </div>
         <div class="actions">
@@ -89,81 +90,81 @@ $paginationQuery = [
     </div>
 
     <?php if ($showFilter): ?>
-            <form action="/test-krida/orders/index.php" method="get" class="card">
-                <input type="hidden" name="show_filter" value="1">
-                <table>
-                    <tr>
-                        <td style="width: 220px;">Nomor Order</td>
-                        <td><input type="text" id="order_no" name="order_no" value="<?= htmlspecialchars($orderNo) ?>"></td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal Order</td>
-                        <td><input type="date" id="order_date" name="order_date" value="<?= htmlspecialchars($orderDate) ?>">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Nama Customer</td>
-                        <td><input type="text" id="customer" name="customer" value="<?= htmlspecialchars($customer) ?>"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <div class="actions">
-                                <button type="submit" class="btn btn-primary">Filter</button>
-                                <a class="btn btn-light" href="/test-krida/orders/index.php?show_filter=1">Reset</a>
-                                <a class="btn btn-light" href="/test-krida/orders/index.php">Tutup</a>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+        <form action="/test-krida/orders/index.php" method="get" class="card">
+            <input type="hidden" name="show_filter" value="1">
+            <table>
+                <tr>
+                    <td style="width: 220px;">Nomor Order</td>
+                    <td><input type="text" id="order_no" name="order_no" value="<?= htmlspecialchars($orderNo) ?>"></td>
+                </tr>
+                <tr>
+                    <td>Tanggal Order</td>
+                    <td><input type="date" id="order_date" name="order_date" value="<?= htmlspecialchars($orderDate) ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nama Customer</td>
+                    <td><input type="text" id="customer" name="customer" value="<?= htmlspecialchars($customer) ?>"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="actions">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a class="btn btn-light" href="/test-krida/orders/index.php?show_filter=1">Reset</a>
+                            <a class="btn btn-light" href="/test-krida/orders/index.php">Tutup</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
     <?php endif; ?>
 
     <?php if ($result && $result->num_rows > 0): ?>
-            <table>
-                <thead>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nomor Order</th>
+                    <th>Tanggal Order</th>
+                    <th>Nama Customer</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
-                        <th>Nomor Order</th>
-                        <th>Tanggal Order</th>
-                        <th>Nama Customer</th>
-                        <th>Action</th>
+                        <td><?= htmlspecialchars($row['orderNo']) ?></td>
+                        <td><?= htmlspecialchars($row['orderDate']) ?></td>
+                        <td><?= htmlspecialchars($row['cust_nama']) ?></td>
+                        <td>
+                            <div class="actions">
+                                <a class="btn btn-light"
+                                    href="/test-krida/orders/view.php?id=<?= (int) $row['orderId'] ?>">View</a>
+                            </div>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['orderNo']) ?></td>
-                                <td><?= htmlspecialchars($row['orderDate']) ?></td>
-                                <td><?= htmlspecialchars($row['cust_nama']) ?></td>
-                                <td>
-                                    <div class="actions">
-                                        <a class="btn btn-light"
-                                            href="/test-krida/orders/view.php?id=<?= (int) $row['orderId'] ?>">View</a>
-                                    </div>
-                                </td>
-                            </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-            <div style="margin-top: 18px;">
-                <div>Page <?= $page ?> of <?= $totalPages ?> show <?= $currentCount ?> record</div>
-                <div class="actions" style="margin-top: 8px;">
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+        <div style="margin-top: 18px;">
+            <div>Page <?= $page ?> of <?= $totalPages ?> show <?= $currentCount ?> record</div>
+            <div class="actions" style="margin-top: 8px;">
+                <?php
+                $prevQuery = http_build_query(array_filter([...$paginationQuery, 'page' => max(1, $page - 1)], fn($v) => $v !== null));
+                $nextQuery = http_build_query(array_filter([...$paginationQuery, 'page' => min($totalPages, $page + 1)], fn($v) => $v !== null));
+                ?>
+                <a href="/test-krida/orders/index.php<?= $page > 1 ? '?' . $prevQuery : '' ?>">previous</a>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                     <?php
-                    $prevQuery = http_build_query(array_filter([...$paginationQuery, 'page' => max(1, $page - 1)], fn($v) => $v !== null));
-                    $nextQuery = http_build_query(array_filter([...$paginationQuery, 'page' => min($totalPages, $page + 1)], fn($v) => $v !== null));
+                    $pageQuery = http_build_query(array_filter([...$paginationQuery, 'page' => $i], fn($v) => $v !== null));
                     ?>
-                    <a href="/test-krida/orders/index.php<?= $page > 1 ? '?' . $prevQuery : '' ?>">previous</a>
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                        <?php
-                        $pageQuery = http_build_query(array_filter([...$paginationQuery, 'page' => $i], fn($v) => $v !== null));
-                        ?>
-                        <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
-                    <?php endfor; ?>
-                    <a href="/test-krida/orders/index.php<?= $page < $totalPages ? '?' . $nextQuery : '' ?>">next</a>
-                </div>
+                    <a href="/test-krida/orders/index.php?<?= $pageQuery ?>"><?= $i ?></a><?= $i < $totalPages ? '|' : '' ?>
+                <?php endfor; ?>
+                <a href="/test-krida/orders/index.php<?= $page < $totalPages ? '?' . $nextQuery : '' ?>">next</a>
             </div>
+        </div>
     <?php else: ?>
-            <div class="empty">Belum ada data sales order.</div>
+        <div class="empty">Belum ada data sales order.</div>
     <?php endif; ?>
 </div>
 
