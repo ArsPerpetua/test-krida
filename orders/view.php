@@ -130,7 +130,6 @@ if ($id > 0) {
 
         <div class="actions" style="margin-top: 18px;">
             <a class="btn btn-light" href="/test-krida/orders/index.php">Kembali</a>
-            <a class="btn btn-primary" href="/test-krida/orders/form.php?id=<?= (int) $order['orderId'] ?>">Save</a>
         </div>
     <?php else: ?>
         <div class="empty">Data sales order tidak ditemukan.</div>

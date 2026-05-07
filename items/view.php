@@ -40,7 +40,6 @@ if ($id > 0) {
 
         <div class="actions" style="margin-top: 18px;">
             <a class="btn btn-light" href="/test-krida/items/index.php">Kembali</a>
-            <a class="btn btn-primary" href="/test-krida/items/form.php?id=<?= (int) $item['itemId'] ?>">Save</a>
         </div>
     <?php else: ?>
         <div class="empty">Data item tidak ditemukan.</div>

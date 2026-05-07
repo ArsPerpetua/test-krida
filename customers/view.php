@@ -44,7 +44,6 @@ if ($id > 0) {
 
         <div class="actions" style="margin-top: 18px;">
             <a class="btn btn-light" href="/test-krida/customers/index.php">Kembali</a>
-            <a class="btn btn-primary" href="/test-krida/customers/form.php?id=<?= (int) $customer['custId'] ?>">Save</a>
         </div>
     <?php else: ?>
         <div class="empty">Data customer tidak ditemukan.</div>
