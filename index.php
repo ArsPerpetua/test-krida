@@ -5,22 +5,28 @@ require_once __DIR__ . '/includes/header.php';
 
 <div class="home-title">Halaman Utama</div>
 
-<div class="home-groups">
-    <div class="home-group-title"><button type="button" class="home-group-link" data-target="master-file-preview">Master
-            File</button></div>
-    <div class="home-group-title"><button type="button" class="home-group-link"
-            data-target="transaksi-preview">Transaksi</button></div>
+<div
+    style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 24px; margin-top: 20px;">
+    <div id="show-all-menus" style="font-size: 22px; font-weight: bold; cursor: pointer; user-select: none;">Daftar Menu
+    </div>
+    <div style="display: flex; gap: 32px; align-items: center;">
+        <button type="button" class="home-group-link" data-target="master-file-preview"
+            style="font-size: 18px; font-weight: 600; cursor: pointer; background: none; border: none; padding: 0; color: #111; white-space: nowrap;">
+            Master File
+        </button>
+
+        <button type="button" class="home-group-link" data-target="transaksi-preview"
+            style="font-size: 18px; font-weight: 600; cursor: pointer; background: none; border: none; padding: 0; color: #111; white-space: nowrap;">
+            Transaksi
+        </button>
+    </div>
 </div>
 
-<div style="margin-top: 32px;">
+<div>
     <div style="width: 100%; max-width: 350px;">
-        <div id="show-all-menus"
-            style="font-size: 22px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 8px; cursor: pointer; user-select: none;">
-            Daftar Menu</div>
-
         <div style="padding-left: 10px;">
             <div class="home-preview active" id="master-file-preview" style="margin-top: 0; margin-bottom: 24px;">
-                <div style="font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #111;">Master File</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 12px; color: #111; ">Master File</div>
                 <div class="home-menu"
                     style="width: auto; margin-left: 20px; border-left: 2px solid #ddd; padding-left: 16px;">
                     <a href="/test-krida/customers/index.php" style="padding: 6px 0; display: block;">&#8226; Master
