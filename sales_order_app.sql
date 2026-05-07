@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Bulan Mei 2026 pada 05.01
+-- Waktu pembuatan: 07 Bulan Mei 2026 pada 07.51
 -- Versi server: 10.4.28-MariaDB
 -- Versi PHP: 8.2.4
 
@@ -83,7 +83,8 @@ CREATE TABLE `orderitem` (
 --
 
 INSERT INTO `orderitem` (`orderItemId`, `orderId`, `itemId`, `qty`, `price`, `discAmount`, `totalItem`) VALUES
-(9, 4, 1, 5.00, 2000.00, 18000.00, 0.00);
+(9, 4, 1, 5.00, 2000.00, 18000.00, 0.00),
+(10, 5, 2, 1.00, 3000.00, 0.00, 3000.00);
 
 -- --------------------------------------------------------
 
@@ -109,7 +110,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`orderId`, `orderNo`, `orderDate`, `custId`, `subtotal`, `discAmount`, `netto`, `dpp`, `ppn`, `grandtotal`) VALUES
-(4, 'KW001', '2023-01-21', 2, 10000.00, 18000.00, 0.00, 0.00, 0.00, 0.00);
+(4, 'KW001', '2023-01-21', 2, 10000.00, 18000.00, 0.00, 0.00, 0.00, 0.00),
+(5, 'KW002', '2026-05-07', 1, 3000.00, 0.00, 3000.00, 3000.00, 330.00, 3330.00);
 
 --
 -- Indexes for dumped tables
@@ -166,13 +168,13 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT untuk tabel `orderitem`
 --
 ALTER TABLE `orderitem`
-  MODIFY `orderItemId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `orderItemId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `orderId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `orderId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
